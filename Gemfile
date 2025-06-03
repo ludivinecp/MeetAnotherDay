@@ -33,6 +33,8 @@ gem "bootsnap", ">= 1.4.4", require: false
 # Seedbank allows you to structure your apps seed data instead of having it all dumped into one large file
 gem "seedbank"
 
+gem "geocoder"
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem "byebug", platforms: %i[mri mingw x64_mingw]
@@ -60,8 +62,15 @@ end
 group :test do
   # Adds support for Capybara system testing and selenium driver
   gem "capybara", ">= 3.26"
+  gem "rails-controller-testing"
   gem "selenium-webdriver", "~> 3.142.7"
+  gem "shoulda-matchers", "~> 5.0"
+  gem "vcr"
+  gem "webdrivers"
+  gem "webmock"
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[mingw mswin x64_mingw jruby]
+
+gem "dotenv-rails", "~> 3.1"

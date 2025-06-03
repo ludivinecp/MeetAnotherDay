@@ -4,6 +4,7 @@
 class EventsController < ApplicationController
   before_action :create_event, only: :create
   before_action :set_event, only: %i[show edit update destroy]
+  before_action :set_location_types, only: %i[new edit create update]
 
   # GET /events or /events.json
   def index
@@ -21,6 +22,8 @@ class EventsController < ApplicationController
   def show
     return unless current_profile
     @event_attendees = policy_scope(EventAttendee.friends_attending(event: @event, profile: current_profile))
+    @friends_attending_count = @event_attendees.count
+    @current_profile = current_profile
   end
 
   # GET /events/new
@@ -87,8 +90,13 @@ class EventsController < ApplicationController
     authorize @event
   end
 
+  # Sets the location types for the event form.
+  def set_location_types
+    @location_types = Event.location_types.keys
+  end
+
   # Only allow a list of trusted parameters through.
   def event_params
-    params.require(:event).permit(:name, :handle, :description, :start_at, :end_at)
+    params.require(:event).permit(:name, :handle, :description, :start_at, :end_at, :location_type, :address)
   end
 end

@@ -1,3 +1,8 @@
+<head>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+
 <div class="section">
   <div class="container">
     <div class="columns">
@@ -7,6 +12,17 @@
         <p>
           <%= kramdown(@event.description) %>
         </p>
+        
+        <%# Location information %>
+        <div class="box">
+          <h2 class="subtitle">Location</h2>
+          <p class="mb-2">
+            <strong><%= @event.location_type.humanize if @event.online?%></strong>
+          </p>
+          
+          <%=render "map", event: @event%>
+        </div>
+
 
         <p>
           <%= buttons(@event, include_nav: true) %>
@@ -15,18 +31,18 @@
 
       <div class="column is-one-quarter">
         <div class="mb-3">
-          <% if current_user&.profile&.attending? @event %>
+          <% if @current_profile&.attending? @event %>
             <%= button_to "Not Attending",
             { controller: :event_attendees,
             action: :destroy,
-            id: current_user&.profile&.event_attendee(@event)&.first&.id },
+            id: @current_profile&.event_attendee(@event)&.first&.id },
             method: :delete,
             class: "button is-danger" %>
           <% elsif current_user %>
             <%= button_to "Attend",
               event_attendees_path(
                 event_attendee: {
-                                  profile_id: current_user.profile&.id,
+                                  profile_id: @current_profile&.id,
                                   event_id: @event.id
                               }
             ),
@@ -34,7 +50,7 @@
             class: "button is-primary" %>
           <% end %>
         </div>
-        <%= render "event_attendees/list", event_attendees: @event_attendees %>
+        <%= render "event_attendees/list", event_attendees: @event_attendees, current_profile: @current_profile, friends_attending_count: @friends_attending_count %>
       </div>
     </div>
   </div>

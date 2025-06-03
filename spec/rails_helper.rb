@@ -10,6 +10,7 @@ require "rspec/rails"
 # Add additional requires below this line. Rails is not loaded until this point!
 require "support/devise" # Add auth helpers + devise
 require "support/factory_bot" # Add Factories
+require "shoulda/matchers"
 
 # Setup spec helpers for Feature tests
 require "capybara/rails"
@@ -93,8 +94,15 @@ RSpec.configure do |config|
   # config.filter_gems_from_backtrace("gem name")
 
   config.before(:each, type: :feature) do
-    Capybara.app_host = "http://#{IPSocket.getaddress(Socket.gethostname)}:4444"
-    Capybara.server_host = IPSocket.getaddress(Socket.gethostname)
+    # Capybara.app_host = "http://#{IPSocket.getaddress(Socket.gethostname)}:4444"
+    Capybara.server_host = "127.0.0.1"
     Capybara.server_port = 4444
+  end
+
+  Shoulda::Matchers.configure do |shoulda_config|
+    shoulda_config.integrate do |with|
+      with.test_framework :rspec
+      with.library :rails
+    end
   end
 end
